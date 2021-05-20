@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:personal_finance/models/transaction.dart';
 import 'package:personal_finance/widgets/chart.dart';
@@ -100,10 +103,9 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
+  PreferredSizeWidget _buildAppBar() {
+    if (Platform.isAndroid) {
+      return AppBar(
         title: Text('Personal Finance'),
         actions: [
           IconButton(
@@ -111,7 +113,18 @@ class _MyHomePageState extends State<MyHomePage> {
             onPressed: () => _showNewTransactionPopup(context),
           ),
         ],
-      ),
+      );
+    } else if (Platform.isIOS) {
+      return CupertinoNavigationBar(
+        middle: Text("Personal Finance"),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: _buildAppBar(),
       body: Column(
         children: [
           Chart(
